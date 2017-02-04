@@ -10,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.example.whr.photoalbum.MyApplication;
 import com.example.whr.photoalbum.R;
+import com.example.whr.photoalbum.activity.MainActivity;
 import com.example.whr.photoalbum.info.ImageInfo;
 import com.example.whr.photoalbum.util.ImageLoader;
 
@@ -59,7 +62,7 @@ public class ImageChildAdapter extends RecyclerView.Adapter {
             public void run() {
                 Log.i("TAG", i++ + "");
                 ImageLoader.getInstance().disPlayImage(imageParent.get(position).getImagePath(), viewHolder.imageView, 4,
-                        ((Activity) context).getWindowManager().getDefaultDisplay().getWidth(), position, handler);
+                        MyApplication.windowWidth, position, handler);
             }
         });
 

@@ -23,17 +23,29 @@ public class ImageLoader {
         return imageloader;
     }
 
+    /**
+     *
+     * @param path 图片路径
+     * @param imageView 显示的View
+     * @param spanCount 缩放倍数
+     * @param displayW 屏幕宽
+     * @param position 位置
+     * @param handler 用于异步操作
+     */
     public void disPlayImage(final String path, ImageView imageView, int spanCount, int displayW, int position, Handler handler) {
+        if (path==null||imageView==null)
+            return;
         Bitmap bitmap;
-        bitmap = CacheUtil.getImageFromCache(path);
+        bitmap = CacheUtil.getCacheChild().getImageFromCache(path);
         int tag = (int) imageView.getTag();
         //判断当前imageView是否可见
         if (bitmap == null) {
             if (tag != position) {
                 return;
             }
-            bitmap = getthumbnail(path);
-            CacheUtil.addImageToCache(path, bitmap);
+            bitmap = getThumbnail(path,195);
+            if (bitmap!=null)
+            CacheUtil.getCacheChild().addImageToCache(path, bitmap);
         }
         if (bitmap == null) {
             return;
@@ -43,17 +55,48 @@ public class ImageLoader {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                newview.setImageBitmap(CacheUtil.getImageFromCache(path));
+                newview.setImageBitmap(CacheUtil.getCacheChild().getImageFromCache(path));
             }
         });
     }
 
-    private Bitmap getthumbnail(String path) {
+    /**
+     * 为了不让封面和内容混淆
+     */
+    public void disPlayImageP(final String path, final ImageView imageView,int position, Handler handler) {
+        final CacheUtil cacheParent = CacheUtil.getCacheParent();
+        if (path == null || imageView == null)
+            return;
+        Bitmap bitmap;
+        bitmap = cacheParent.getImageFromCache(path);
+        int tag = (int) imageView.getTag();
+        //判断当前imageView是否可见
+        if (bitmap == null) {
+            if (tag != position) {
+                return;
+            }
+            bitmap = getThumbnail(path,360);
+            if (bitmap != null)
+                cacheParent.addImageToCache(path, bitmap);
+        }
+        if (bitmap == null) {
+            return;
+        }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setImageBitmap(cacheParent.getImageFromCache(path));
+            }
+        });
+    }
+
+
+    private Bitmap getThumbnail(String path,int reqWidth) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
         options.inJustDecodeBounds = false;
-        options.inSampleSize = calculateInSampleSize(options, 195);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth);
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         return BitmapFactory.decodeFile(path, options);
 
@@ -75,35 +118,6 @@ public class ImageLoader {
         imageView.getLayoutParams().width = displayw/count;
         imageView.getLayoutParams().height = displayw/count;
         return imageView;
-    }
-
-    static class CacheUtil {
-        private static LruCache<String,Bitmap> lruCache = new LruCache<String,Bitmap>(1024 * 1024 * 20){
-            /**
-             * 此方法用于计算图片大小，不同SDK计算方法不同，
-             * 必须重新该方法
-             * @param key
-             * @param bitmap
-             * @return
-             */
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-                    return bitmap.getByteCount();
-                }
-                return bitmap.getRowBytes() * bitmap.getHeight();
-            }
-        };
-
-
-
-        public static void addImageToCache(String path, Bitmap bitmap) {
-            lruCache.put(path, bitmap);
-        }
-
-        public static Bitmap getImageFromCache(String path) {
-            return  lruCache.get(path);
-        }
     }
 
 }

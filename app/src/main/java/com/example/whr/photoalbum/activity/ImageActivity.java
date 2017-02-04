@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import com.example.whr.photoalbum.R;
 import com.example.whr.photoalbum.adapter.ImageChildAdapter;
@@ -30,7 +29,7 @@ public class ImageActivity extends AppCompatActivity {
 
     private void initdata() {
         String parentName = getIntent().getStringExtra("parentName");
-        Map<String, List<ImageInfo>> images = new ImageUtil(this).getimages();
+        Map<String, List<ImageInfo>> images = ImageUtil.getInstance(this).getImages();
         recyclerView.setAdapter(new ImageChildAdapter(this, images.get(parentName)));
     }
 }

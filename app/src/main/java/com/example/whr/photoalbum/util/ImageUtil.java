@@ -32,10 +32,19 @@ import java.util.Map;
 
 public class ImageUtil {
     private Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    private ContentResolver contentResolver;
+    private static ContentResolver contentResolver;
+    private static ImageUtil imageUtil;
 
-    public ImageUtil(Context context) {
-        this.contentResolver = context.getContentResolver();
+    private ImageUtil() {
+
+    }
+
+    public static ImageUtil getInstance(Context context) {
+        ImageUtil.contentResolver = context.getContentResolver();
+        if (imageUtil == null) {
+            imageUtil = new ImageUtil();
+        }
+        return imageUtil;
     }
 
     /**
@@ -48,7 +57,7 @@ public class ImageUtil {
      * 第五个参数为排序
      * @return
      */
-    public Map<String, List<ImageInfo>> getimages() {
+    public Map<String, List<ImageInfo>> getImages() {
         Map<String, List<ImageInfo>> images = new HashMap<>();
         Cursor cursor = contentResolver.query(uri, new String[]{ MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA}
                 , null, null, null);
