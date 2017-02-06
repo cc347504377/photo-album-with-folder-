@@ -29,7 +29,7 @@ public class ImageActivity extends AppCompatActivity {
 
     private void initdata() {
         String parentName = getIntent().getStringExtra("parentName");
-        Map<String, List<ImageInfo>> images = ImageUtil.getInstance(this).getImages();
+        Map<String, List<ImageInfo>> images = ImageUtil.getInstance(getContentResolver()).getImages();
         recyclerView.setAdapter(new ImageChildAdapter(this, images.get(parentName)));
     }
 }

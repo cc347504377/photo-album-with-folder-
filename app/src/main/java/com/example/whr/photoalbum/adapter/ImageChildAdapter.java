@@ -1,9 +1,7 @@
 package com.example.whr.photoalbum.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.widget.ImageView;
 
 import com.example.whr.photoalbum.MyApplication;
 import com.example.whr.photoalbum.R;
-import com.example.whr.photoalbum.activity.MainActivity;
 import com.example.whr.photoalbum.info.ImageInfo;
 import com.example.whr.photoalbum.util.ImageLoader;
 

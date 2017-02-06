@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class PhotoAlbumActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<ParentInfo> data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_photoalbum);
         getPermissionRW(this);
         initReView();
     }
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        Map<String, List<ImageInfo>> images = ImageUtil.getInstance(this).getImages();
+        Map<String, List<ImageInfo>> images = ImageUtil.getInstance(getContentResolver()).getImages();
         data = new ArrayList<>();
         Set<String> keySet = images.keySet();
         for (String s : keySet) {

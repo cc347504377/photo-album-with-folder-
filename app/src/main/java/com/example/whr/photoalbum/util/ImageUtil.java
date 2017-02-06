@@ -39,9 +39,9 @@ public class ImageUtil {
 
     }
 
-    public static ImageUtil getInstance(Context context) {
-        ImageUtil.contentResolver = context.getContentResolver();
+    public static ImageUtil getInstance(ContentResolver contentResolver) {
         if (imageUtil == null) {
+            ImageUtil.contentResolver = contentResolver;
             imageUtil = new ImageUtil();
         }
         return imageUtil;
